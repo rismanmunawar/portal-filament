@@ -12,6 +12,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Toggle;
+
 
 class DataITResource extends Resource
 {
@@ -25,26 +29,32 @@ class DataITResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nik')
+                TextInput::make('nik')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('alias')
+                TextInput::make('alias')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('designation')
+                TextInput::make('designation')
                     ->maxLength(255),
-                Forms\Components\FileUpload::make('image')
-                    ->image(),
-                Forms\Components\TextInput::make('phone')
-                    ->tel()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('status')
+                TextInput::make('phone')
+                    ->tel()
+                    ->maxLength(255),
+                Toggle::make('status')
                     ->required(),
+                FileUpload::make('image')
+                    ->image()
+                    ->minSize(1)
+                    // ->maxSize(1024)
+                    ->maxSize(5120)
+                    ->imageEditor()
+                    ->avatar()
+                    ->acceptedFileTypes(['image/jpeg', 'image/jpg', 'image/png']),
             ]);
     }
 
