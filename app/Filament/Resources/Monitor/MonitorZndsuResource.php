@@ -17,9 +17,9 @@ class MonitorZndsuResource extends Resource
 {
     protected static ?string $model = MonitorZndsu::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
+    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
     protected static ?string $navigationGroup = 'Data Monitoring';
-    protected static ?string $navigationLabel = 'Upload Data Zndsu';
+    protected static ?string $navigationLabel = 'Data Monitoring';
 
 
     public static function form(Form $form): Form
@@ -112,112 +112,85 @@ class MonitorZndsuResource extends Resource
 
     public static function table(Table $table): Table
     {
+        // Ambil semua data, bisa dibatasi kalau terlalu besar
+        $records = static::getModel()::all();
+
+        // Cek kolom mana yang punya isi
+        $dayColumns = [];
+        for ($i = 1; $i <= 31; $i++) {
+            $dayKey = 'day_' . str_pad($i, 2, '0', STR_PAD_LEFT);
+            $label = str_pad($i, 2, '0', STR_PAD_LEFT);
+
+            // Cek apakah ada record yang kolom ini tidak null/kosong
+            $hasData = $records->contains(function ($record) use ($dayKey) {
+                return !empty($record->{$dayKey});
+            });
+
+            if ($hasData) {
+                $dayColumns[] = Tables\Columns\IconColumn::make($dayKey)
+                    ->label($label)
+                    ->icon(fn(?string $state) => match ($state) {
+                        'done' => 'heroicon-o-check-circle',
+                        'libur' => 'heroicon-o-exclamation-circle',
+                        'error' => 'heroicon-o-x-circle',
+                        default => 'heroicon-o-question-mark-circle',
+                    })
+                    ->color(fn(?string $state) => match ($state) {
+                        'done' => 'success',
+                        'libur' => 'warning',
+                        'error' => 'danger',
+                        default => 'gray',
+                    })
+                    ->tooltip(fn(?string $state) => ucfirst($state ?? 'unknown')); // ✅ ini munculkan tooltip
+            }
+        }
+
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
+            ->columns(array_merge([
+                Tables\Columns\TextColumn::make('no')
+                    ->label('No.')
+                    ->rowIndex()
+                    ->alignCenter()
+                    ->toggleable(false),
+
                 Tables\Columns\TextColumn::make('plant')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('Plant'),
+
                 Tables\Columns\TextColumn::make('name_dist')
+                    ->searchable()
+                    ->label('Distributor'),
+
+                Tables\Columns\TextColumn::make('rom.name')
+                    ->label('ROM')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('rom_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nom_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('it_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('uploaded_at')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('has_error')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('day_01')
+
+                Tables\Columns\TextColumn::make('nom.name')
+                    ->label('NOM')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('day_02')
+
+                Tables\Columns\TextColumn::make('it.alias')
+                    ->label('IT')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('day_03')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_04')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_05')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_06')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_07')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_08')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_09')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_10')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_11')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_12')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_13')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_14')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_15')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_16')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_17')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_18')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_19')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_20')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_21')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_22')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_23')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_24')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_25')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_26')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_27')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_28')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_29')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_30')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('day_31')
-                    ->searchable(),
+
+            ], $dayColumns, [
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ]))
+            ->filters([])
+            ->actions([])
+            ->bulkActions([])
+            ->recordUrl(fn() => null);
     }
 
     public static function getRelations(): array

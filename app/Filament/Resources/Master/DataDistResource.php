@@ -5,6 +5,9 @@ namespace App\Filament\Resources\Master;
 use App\Filament\Resources\Master\DataDistResource\Pages;
 use App\Filament\Resources\Master\DataDistResource\RelationManagers;
 use App\Models\Master\DataDist;
+use App\Models\Master\DataROM;
+use App\Models\Master\DataNOM;
+use App\Models\Master\DataIT;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -20,6 +23,8 @@ class DataDistResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     protected static ?string $navigationGroup = 'Master Data';
     protected static ?string $navigationLabel = 'Data Distribution';
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -40,12 +45,23 @@ class DataDistResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('channel')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('rom_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('nom_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('it_id')
-                    ->numeric(),
+                Forms\Components\Select::make('rom_id')
+                    ->label('ROM')
+                    ->options(DataROM::pluck('name', 'id'))
+                    ->searchable()
+                    ->preload(),
+
+                Forms\Components\Select::make('nom_id')
+                    ->label('NOM')
+                    ->options(DataNOM::pluck('name', 'id'))
+                    ->searchable()
+                    ->preload(),
+
+                Forms\Components\Select::make('it_id')
+                    ->label('IT')
+                    ->options(DataIT::pluck('name', 'id'))
+                    ->searchable()
+                    ->preload(),
                 Forms\Components\TextInput::make('region')
                     ->maxLength(255),
                 Forms\Components\Toggle::make('status_plant')
@@ -62,7 +78,7 @@ class DataDistResource extends Resource
                 Tables\Columns\TextColumn::make('plant')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('code_dist')
-                    ->numeric()
+                    ->label('Kode Dist')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name_dist')
                     ->searchable(),
@@ -70,14 +86,17 @@ class DataDistResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('channel')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('rom_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('rom.name')
+                    ->label('ROM')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('nom_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('nom.name')
+                    ->label('NOM')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('it_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('it.name')
+                    ->label('IT')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('region')
                     ->searchable(),

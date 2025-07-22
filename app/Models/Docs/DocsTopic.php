@@ -15,4 +15,8 @@ class DocsTopic extends Model
         'sub_category_id',
         'sub_sub_category_id',
     ];
+    public function subSubCategory()
+    {
+        return $this->belongsTo(DocsSubSubCategory::class);
+    }
 }

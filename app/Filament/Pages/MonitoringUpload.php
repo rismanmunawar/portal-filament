@@ -20,9 +20,9 @@ class MonitoringUpload extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
     protected static string $view = 'filament.pages.monitoring-upload';
-    protected static ?string $navigationLabel = 'Upload Monitoring';
-    protected static ?string $title = 'Upload Monitoring Data';
-    protected static ?string $navigationGroup = 'Monitoring';
+    protected static ?string $navigationLabel = 'Upload Data Monitoring';
+    protected static ?string $title = 'Upload Data Monitoring';
+    protected static ?string $navigationGroup = 'Data Monitoring';
 
     public $file;
     public $uploaded_at;
@@ -58,11 +58,14 @@ class MonitoringUpload extends Page implements HasForms
     {
         $data = $this->form->getState();
 
+        // Ambil path file yang sudah diupload
         $path = $data['file'];
         $file = Storage::disk('local')->path($path);
 
+        // Kosongkan tabel monitoring sebelum upload baru
         MonitorZndsu::truncate();
 
+        // Jalankan proses import Excel
         $import = new MonitoringImport();
         Excel::import($import, $file);
 
@@ -70,25 +73,28 @@ class MonitoringUpload extends Page implements HasForms
         $user = Auth::user();
         $uploadedAt = $data['uploaded_at'];
 
+        // Ambil kolom tanggal (01 - 31) dari header sheet
         $dateColumns = $sheet->first()?->keys()?->filter(fn($key) => preg_match('/^\d{2}$/', $key)) ?? [];
 
         foreach ($sheet as $row) {
             $plant = trim(strtoupper($row['plants'] ?? ''));
             $name = $row['plant_name'] ?? null;
 
+            // Lewati baris kosong atau tidak valid
             if (!$plant || !$name) {
                 continue;
             }
 
+            // Cari data distribusi berdasarkan plant
             $dataDist = DataDist::whereRaw('UPPER(TRIM(plant)) = ?', [$plant])->first();
 
             $rowData = [
                 'user_id'     => $user->id,
                 'plant'       => $plant,
                 'name_dist'   => $name,
-                'rom_id'      => $dataDist->rom_id ?? null,
-                'nom_id'      => $dataDist->nom_id ?? null,
-                'it_id'       => $dataDist->it_id ?? null,
+                'rom_id'      => optional($dataDist)->rom_id,
+                'nom_id'      => optional($dataDist)->nom_id,
+                'it_id'       => optional($dataDist)->it_id,
                 'uploaded_at' => $uploadedAt,
                 'created_at'  => now(),
                 'updated_at'  => now(),
@@ -96,6 +102,7 @@ class MonitoringUpload extends Page implements HasForms
 
             $hasError = false;
 
+            // Loop isi hari per bulan (01 - 31)
             foreach ($dateColumns as $day) {
                 $raw = strtoupper(trim((string)($row[$day] ?? '')));
 
@@ -116,9 +123,11 @@ class MonitoringUpload extends Page implements HasForms
 
             $rowData['has_error'] = $hasError;
 
+            // Simpan ke database
             MonitorZndsu::create($rowData);
         }
 
+        // Notifikasi sukses
         Notification::make()
             ->title('Upload Berhasil')
             ->body('Data berhasil diupload dan disimpan.')

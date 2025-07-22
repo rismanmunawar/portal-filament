@@ -16,8 +16,7 @@ return new class extends Migration
             $table->integer('nik')->unique()->nullable();
             $table->string('name');
             $table->string('alias')->nullable();
-            $table->string('role')->nullable();
-            $table->string('role_desc')->nullable();
+            $table->string('designation')->nullable();
             $table->string('phone')->nullable();
             $table->string('plant')->nullable();
             $table->string('email')->unique();

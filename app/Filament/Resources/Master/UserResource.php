@@ -26,8 +26,8 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'Master Data';
-    protected static ?string $navigationLabel = 'Data User';
+    protected static ?string $navigationGroup = 'Filament Shield';
+    protected static ?string $navigationLabel = 'Users';
 
     public static function form(Form $form): Form
     {
@@ -36,11 +36,6 @@ class UserResource extends Resource
                 TextInput::make('nik')->required()->unique(),
                 TextInput::make('name')->required(),
                 TextInput::make('alias'),
-                Select::make('role')->options([
-                    'superadmin' => 'Super Admin',
-                    'admin' => 'Admin',
-                    'user' => 'User'
-                ])->required(),
                 TextInput::make('role_desc'),
                 TextInput::make('phone')->required(),
                 TextInput::make('plant')->required(),
