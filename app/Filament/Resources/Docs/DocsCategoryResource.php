@@ -76,4 +76,9 @@ class DocsCategoryResource extends Resource
             'edit' => Pages\EditDocsCategory::route('/{record}/edit'),
         ];
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }

@@ -17,4 +17,10 @@ class DataIT extends Model
         'email',
         'status',
     ];
+
+    // ========================
+    public function dists()
+    {
+        return $this->belongsToMany(DataDist::class, 'data_dist_it', 'data_it_id', 'data_dist_id');
+    }
 }

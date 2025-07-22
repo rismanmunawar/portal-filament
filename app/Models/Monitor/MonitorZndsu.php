@@ -22,4 +22,9 @@ class MonitorZndsu extends Model
     {
         return $this->belongsTo(\App\Models\Master\DataIt::class, 'it_id');
     }
+
+    public function dataDist()
+    {
+        return $this->hasOne(\App\Models\Master\DataDist::class, 'plant', 'plant');
+    }
 }

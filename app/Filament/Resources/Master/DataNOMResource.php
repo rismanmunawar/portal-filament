@@ -99,4 +99,8 @@ class DataNOMResource extends Resource
             'edit' => Pages\EditDataNOM::route('/{record}/edit'),
         ];
     }
+    public static function getSlug(): string
+    {
+        return 'md-nom'; // custom URL segment
+    }
 }

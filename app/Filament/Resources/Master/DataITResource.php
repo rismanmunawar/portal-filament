@@ -116,4 +116,9 @@ class DataITResource extends Resource
             'edit' => Pages\EditDataIT::route('/{record}/edit'),
         ];
     }
+
+    public static function getSlug(): string
+    {
+        return 'md-it'; // custom URL segment
+    }
 }

@@ -110,4 +110,8 @@ class DocsSubSubCategoryResource extends Resource
             'edit' => Pages\EditDocsSubSubCategory::route('/{record}/edit'),
         ];
     }
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }

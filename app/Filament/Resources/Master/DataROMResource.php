@@ -99,4 +99,8 @@ class DataROMResource extends Resource
             'edit' => Pages\EditDataROM::route('/{record}/edit'),
         ];
     }
+    public static function getSlug(): string
+    {
+        return 'md-rom'; // custom URL segment
+    }
 }

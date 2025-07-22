@@ -26,7 +26,7 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'Filament Shield';
+    protected static ?string $navigationGroup = 'Access Management';
     protected static ?string $navigationLabel = 'Users';
 
     public static function form(Form $form): Form
@@ -120,4 +120,10 @@ class UserResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
+
+    // Count pada menu
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::count();
+    // }
 }

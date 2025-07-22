@@ -21,4 +21,10 @@ class DataDist extends Model
     {
         return $this->belongsTo(\App\Models\Master\DataIT::class, 'it_id');
     }
+
+    // =============
+    public function its()
+    {
+        return $this->belongsToMany(DataIt::class, 'data_dist_it', 'data_dist_id', 'data_it_id');
+    }
 }

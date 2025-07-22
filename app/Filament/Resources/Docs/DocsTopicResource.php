@@ -146,4 +146,8 @@ class DocsTopicResource extends Resource
             'edit' => Pages\EditDocsTopic::route('/{record}/edit'),
         ];
     }
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 }

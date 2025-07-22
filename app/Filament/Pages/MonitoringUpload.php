@@ -20,9 +20,10 @@ class MonitoringUpload extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
     protected static string $view = 'filament.pages.monitoring-upload';
-    protected static ?string $navigationLabel = 'Upload Data Monitoring';
+    protected static ?string $navigationLabel = 'Upload Monitoring';
     protected static ?string $title = 'Upload Data Monitoring';
-    protected static ?string $navigationGroup = 'Data Monitoring';
+    protected static ?string $navigationGroup = 'System Management';
+
 
     public $file;
     public $uploaded_at;
@@ -134,4 +135,19 @@ class MonitoringUpload extends Page implements HasForms
             ->success()
             ->send();
     }
+
+    // Menghitung data Error
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return \App\Models\Monitor\MonitorZndsu::where(function ($query) {
+    //         for ($i = 1; $i <= 31; $i++) {
+    //             $dayKey = 'day_' . str_pad($i, 2, '0', STR_PAD_LEFT);
+    //             $query->orWhere($dayKey, 'error');
+    //         }
+    //     })->count();
+    // }
+    // public static function getNavigationBadgeColor(): ?string
+    // {
+    //     return 'danger'; // warna merah
+    // }
 }

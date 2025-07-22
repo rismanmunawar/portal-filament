@@ -18,7 +18,7 @@ class MonitorZndsuResource extends Resource
     protected static ?string $model = MonitorZndsu::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
-    protected static ?string $navigationGroup = 'Data Monitoring';
+    // protected static ?string $navigationGroup = 'Data Monitoring';
     protected static ?string $navigationLabel = 'Data Monitoring';
 
 
@@ -141,7 +141,12 @@ class MonitorZndsuResource extends Resource
                         'error' => 'danger',
                         default => 'gray',
                     })
-                    ->tooltip(fn(?string $state) => ucfirst($state ?? 'unknown')); // ✅ ini munculkan tooltip
+                    ->tooltip(fn(?string $state) => match ($state) {
+                        'done' => 'Done',
+                        'libur' => 'No Extract',
+                        'error' => 'Error extract',
+                        default => 'Status tidak diketahui',
+                    });
             }
         }
 
@@ -171,10 +176,17 @@ class MonitorZndsuResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('it.alias')
-                    ->label('IT')
-                    ->sortable()
-                    ->searchable(),
+                Tables\Columns\BadgeColumn::make('dataDist.its.alias')
+                    ->label('PIC IT')
+                    ->colors(['success'])
+                    ->formatStateUsing(function ($state) {
+                        // Gabungkan jadi array badge
+                        if (is_iterable($state)) {
+                            return collect($state)->pluck('alias')->unique()->toArray();
+                        }
+                        // Kalau satu value string
+                        return $state;
+                    }),
 
             ], $dayColumns, [
                 Tables\Columns\TextColumn::make('created_at')
@@ -208,5 +220,64 @@ class MonitorZndsuResource extends Resource
             'view' => Pages\ViewMonitorZndsu::route('/{record}'),
             'edit' => Pages\EditMonitorZndsu::route('/{record}/edit'),
         ];
+    }
+
+    // Menghitung jumlah error
+    public static function getNavigationBadge(): ?string
+    {
+        $totalErrors = 0;
+
+        $query = \App\Models\Monitor\MonitorZndsu::query();
+
+        // Ambil hanya field day_01 s.d day_31 dari seluruh record
+        $records = $query->select([
+            'day_01',
+            'day_02',
+            'day_03',
+            'day_04',
+            'day_05',
+            'day_06',
+            'day_07',
+            'day_08',
+            'day_09',
+            'day_10',
+            'day_11',
+            'day_12',
+            'day_13',
+            'day_14',
+            'day_15',
+            'day_16',
+            'day_17',
+            'day_18',
+            'day_19',
+            'day_20',
+            'day_21',
+            'day_22',
+            'day_23',
+            'day_24',
+            'day_25',
+            'day_26',
+            'day_27',
+            'day_28',
+            'day_29',
+            'day_30',
+            'day_31',
+        ])->get();
+
+        foreach ($records as $record) {
+            for ($i = 1; $i <= 31; $i++) {
+                $dayKey = 'day_' . str_pad($i, 2, '0', STR_PAD_LEFT);
+                if ($record->{$dayKey} === 'error') {
+                    $totalErrors++;
+                }
+            }
+        }
+
+        return $totalErrors > 0 ? (string) $totalErrors : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger'; // merah
     }
 }

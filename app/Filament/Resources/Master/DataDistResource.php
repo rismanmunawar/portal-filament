@@ -57,11 +57,12 @@ class DataDistResource extends Resource
                     ->searchable()
                     ->preload(),
 
-                Forms\Components\Select::make('it_id')
-                    ->label('IT')
-                    ->options(DataIT::pluck('name', 'id'))
+                Forms\Components\MultiSelect::make('its')
+                    ->label('PIC IT')
+                    ->relationship('its', 'name') // relasi many-to-many
                     ->searchable()
                     ->preload(),
+
                 Forms\Components\TextInput::make('region')
                     ->maxLength(255),
                 Forms\Components\Toggle::make('status_plant')
@@ -94,10 +95,11 @@ class DataDistResource extends Resource
                     ->label('NOM')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('it.name')
-                    ->label('IT')
-                    ->searchable()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('its.name')
+                    ->label('PIC IT')
+                    ->listWithLineBreaks() // tampil per baris
+                    ->bulleted()           // pakai bullet
+                    ->limit(50),
                 Tables\Columns\TextColumn::make('region')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('status_plant')
@@ -140,5 +142,9 @@ class DataDistResource extends Resource
             'view' => Pages\ViewDataDist::route('/{record}'),
             'edit' => Pages\EditDataDist::route('/{record}/edit'),
         ];
+    }
+    public static function getSlug(): string
+    {
+        return 'md-dist'; // custom URL segment
     }
 }
