@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Support\Collection;
-
+use Spatie\Permission\Models\Role;
 
 class UserResource extends Resource
 {
@@ -33,13 +33,20 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('nik')->required()->unique(),
+                TextInput::make('nik')
+                    ->required(),
                 TextInput::make('name')->required(),
                 TextInput::make('alias'),
-                TextInput::make('role_desc'),
+                TextInput::make('designation'),
                 TextInput::make('phone')->required(),
                 TextInput::make('plant')->required(),
                 TextInput::make('email')->required()->email(),
+                Select::make('roles')
+                    ->label('Role')
+                    ->multiple()
+                    ->relationship('roles', 'name')
+                    ->preload()
+                    ->required(),
                 TextInput::make('password')->password()->required()->maxLength(255),
                 Toggle::make('status_user')
                     ->label('Status')
@@ -56,7 +63,12 @@ class UserResource extends Resource
                 TextColumn::make('nik')->sortable(),
                 TextColumn::make('name')->sortable(),
                 TextColumn::make('alias')->sortable(),
-                TextColumn::make('role')->sortable(),
+                TextColumn::make('roles.name')
+                    ->label('Roles')
+                    ->badge()
+                    ->separator(', ')
+                    ->sortable(false)
+                    ->searchable(),
                 TextColumn::make('phone')->sortable(),
                 TextColumn::make('plant')->sortable(),
                 TextColumn::make('email')->sortable(),
