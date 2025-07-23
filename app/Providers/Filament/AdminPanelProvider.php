@@ -20,6 +20,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Hasnayeen\Themes\ThemesPlugin;
+use App\Filament\Widgets\AnnouncementWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -33,6 +34,9 @@ class AdminPanelProvider extends PanelProvider
             ->registration()
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->widgets([
+                AnnouncementWidget::class,
             ])
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('18rem')

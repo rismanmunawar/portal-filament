@@ -14,15 +14,19 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('back')
-                ->label('Kembali')
+            Actions\Action::make('Back')
+                ->label('Back')
                 ->icon('heroicon-o-arrow-left')
-                ->url(UserResource::getUrl('index'))
+                ->url(static::getResource()::getUrl('index'))
                 ->color('gray'),
             Actions\ViewAction::make(),
             // Actions\DeleteAction::make(),
             // Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
         ];
+    }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

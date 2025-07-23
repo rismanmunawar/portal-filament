@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Docs\DocsTopicResource\Pages;
+namespace App\Filament\Resources\Announcement\AnnouncementResource\Pages;
 
-use App\Filament\Resources\Docs\DocsTopicResource;
+use App\Filament\Resources\Announcement\AnnouncementResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditDocsTopic extends EditRecord
+class EditAnnouncement extends EditRecord
 {
-    protected static string $resource = DocsTopicResource::class;
-
+    protected static string $resource = AnnouncementResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -19,7 +18,6 @@ class EditDocsTopic extends EditRecord
                 ->icon('heroicon-o-arrow-left')
                 ->url(static::getResource()::getUrl('index'))
                 ->color('gray'),
-            Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
         ];
     }
