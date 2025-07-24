@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
+use App\Filament\Clusters\MasterData;
 
 
 class DataITResource extends Resource
@@ -22,8 +23,9 @@ class DataITResource extends Resource
     protected static ?string $model = DataIT::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cpu-chip';
-    protected static ?string $navigationGroup = 'Master Data';
     protected static ?string $navigationLabel = 'Data IT';
+    protected static ?string $cluster = MasterData::class;
+    protected static ?string $label = 'Data IT';
 
     public static function form(Form $form): Form
     {

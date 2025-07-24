@@ -20,6 +20,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use PhpParser\Comment\Doc;
+use App\Filament\Clusters\DocsSettings;
 
 class DocsTopicResource extends Resource
 {
@@ -27,7 +28,8 @@ class DocsTopicResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Docs Management';
-    protected static ?string $navigationLabel = 'Topic Documents';
+    protected static ?string $navigationLabel = 'Topics';
+    protected static ?string $cluster = DocsSettings::class;
 
     public static function form(Form $form): Form
     {
@@ -91,30 +93,27 @@ class DocsTopicResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->limit(20) // opsional, untuk ringkas
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('content')
+                    ->limit(15) // opsional, untuk ringkas
                     ->searchable(),
-                Tables\Columns\TextColumn::make('video_url')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('file_path')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('category_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('sub_category_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('sub_sub_category_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('subCategory.name')
+                    ->label('Sub Category')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('subSubCategory.name')
+                    ->label('Sub Sub Category')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -129,6 +128,7 @@ class DocsTopicResource extends Resource
                 ]),
             ]);
     }
+
 
     public static function getRelations(): array
     {
@@ -145,9 +145,5 @@ class DocsTopicResource extends Resource
             'view' => Pages\ViewDocsTopic::route('/{record}'),
             'edit' => Pages\EditDocsTopic::route('/{record}/edit'),
         ];
-    }
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
 }

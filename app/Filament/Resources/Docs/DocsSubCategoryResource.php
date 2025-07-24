@@ -16,6 +16,7 @@ use App\Models\Docs\DocsCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use PhpParser\Comment\Doc;
+use App\Filament\Clusters\DocsSettings;
 
 class DocsSubCategoryResource extends Resource
 {
@@ -24,6 +25,8 @@ class DocsSubCategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';
     protected static ?string $navigationGroup = 'Docs Management';
     protected static ?string $navigationLabel = 'Sub Category';
+    protected static ?string $cluster = DocsSettings::class;
+
 
     public static function form(Form $form): Form
     {
@@ -42,9 +45,10 @@ class DocsSubCategoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('category_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -83,10 +87,5 @@ class DocsSubCategoryResource extends Resource
             'view' => Pages\ViewDocsSubCategory::route('/{record}'),
             'edit' => Pages\EditDocsSubCategory::route('/{record}/edit'),
         ];
-    }
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
 }

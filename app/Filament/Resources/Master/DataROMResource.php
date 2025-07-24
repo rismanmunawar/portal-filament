@@ -12,14 +12,16 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Clusters\MasterData;
 
 class DataROMResource extends Resource
 {
     protected static ?string $model = DataROM::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-    protected static ?string $navigationGroup = 'Master Data';
     protected static ?string $navigationLabel = 'Data ROM';
+    protected static ?string $cluster = MasterData::class;
+    protected static ?string $label = 'Data ROM';
 
     public static function form(Form $form): Form
     {

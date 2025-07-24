@@ -13,8 +13,8 @@ class AnnouncementBoard extends Page
 
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     protected static string $view = 'filament.pages.announcement-board';
-    protected static ?string $navigationLabel = 'Pengumuman';
-    protected static ?string $title = 'Pengumuman';
+    protected static ?string $navigationLabel = 'Announcement';
+    protected static ?string $title = 'Announcement';
 
     public string $search = '';
     public string $categoryFilter = 'all';

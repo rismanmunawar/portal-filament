@@ -26,7 +26,7 @@ class AnnouncementObserver
         $recipients = User::all();
 
         Notification::make()
-            ->title('Pengumuman Baru')
+            ->title('Announcement New')
             ->body("{$announcement->title} telah diterbitkan. Klik untuk melihat detailnya.")
             ->icon('heroicon-o-megaphone')
             ->color(match ($announcement->type) {

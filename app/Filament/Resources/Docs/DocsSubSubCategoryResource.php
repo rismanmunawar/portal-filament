@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Clusters\DocsSettings;
 
 use App\Models\Docs\DocsCategory;
 use App\Models\Docs\DocsSubCategory;
@@ -25,6 +26,7 @@ class DocsSubSubCategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-vertical';
     protected static ?string $navigationGroup = 'Docs Management';
     protected static ?string $navigationLabel = 'Sub Sub-Category';
+    protected static ?string $cluster = DocsSettings::class;
 
     public static function form(Form $form): Form
     {
@@ -65,12 +67,17 @@ class DocsSubSubCategoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('category_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('sub_category_id')
-                    ->numeric()
-                    ->sortable(),
+                // Menampilkan nama kategori dari relasi category
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
+                    ->sortable()
+                    ->searchable(),
+
+                // Menampilkan nama sub kategori dari relasi subCategory
+                Tables\Columns\TextColumn::make('subCategory.name')
+                    ->label('Sub Category')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -109,9 +116,5 @@ class DocsSubSubCategoryResource extends Resource
             'view' => Pages\ViewDocsSubSubCategory::route('/{record}'),
             'edit' => Pages\EditDocsSubSubCategory::route('/{record}/edit'),
         ];
-    }
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
 }

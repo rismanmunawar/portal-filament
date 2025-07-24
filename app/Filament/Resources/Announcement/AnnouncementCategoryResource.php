@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Clusters\AnnouncementSettings;
 
 class AnnouncementCategoryResource extends Resource
 {
@@ -19,6 +20,8 @@ class AnnouncementCategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Manajemen Pengumuman';
+    protected static ?string $cluster = AnnouncementSettings::class;
+
     public static function form(Form $form): Form
     {
         return $form

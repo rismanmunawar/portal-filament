@@ -14,13 +14,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Grid;
+use App\Filament\Clusters\AnnouncementSettings;
 
 class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
-    protected static ?string $navigationGroup = 'Manajemen Pengumuman';
+    protected static ?string $navigationGroup = 'Manajemen Announcement';
+    protected static ?string $cluster = AnnouncementSettings::class;
 
 
     public static function form(Form $form): Form

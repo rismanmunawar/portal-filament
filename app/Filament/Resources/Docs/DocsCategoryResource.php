@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Docs;
 
+use App\Filament\Clusters\DocsSettings;
 use App\Filament\Resources\Docs\DocsCategoryResource\Pages;
 use App\Filament\Resources\Docs\DocsCategoryResource\RelationManagers;
 use App\Models\Docs\DocsCategory;
@@ -16,10 +17,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DocsCategoryResource extends Resource
 {
     protected static ?string $model = DocsCategory::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-folder';
     protected static ?string $navigationGroup = 'Docs Management';
     protected static ?string $navigationLabel = 'Category';
+    protected static ?string $cluster = DocsSettings::class;
 
     public static function form(Form $form): Form
     {
@@ -75,10 +76,5 @@ class DocsCategoryResource extends Resource
             'view' => Pages\ViewDocsCategory::route('/{record}'),
             'edit' => Pages\EditDocsCategory::route('/{record}/edit'),
         ];
-    }
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
 }
