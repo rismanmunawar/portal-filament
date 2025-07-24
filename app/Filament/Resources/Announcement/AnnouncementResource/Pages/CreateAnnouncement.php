@@ -9,8 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAnnouncement extends CreateRecord
 {
     protected static string $resource = AnnouncementResource::class;
-    protected function getRedirectUrl(): string
+    protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return $this->getResource()::getUrl('index');
+        $data['user_id'] = auth()->id(); // Tambahkan user_id di sini
+        return $data;
     }
 }

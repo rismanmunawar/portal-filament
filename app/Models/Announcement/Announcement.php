@@ -2,53 +2,45 @@
 
 namespace App\Models\Announcement;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class Announcement extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'announcement_category_id',
         'user_id',
-        'category_id',
         'title',
         'content',
-        'type',
-        'is_active',
-        'starts_at',
-        'ends_at',
         'attachment_path',
         'is_pinned',
-        'priority'
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-        'is_pinned' => 'boolean',
-        'starts_at' => 'datetime',
-        'ends_at' => 'datetime',
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-
+    public function comments()
+    {
+        return $this->hasMany(AnnouncementComment::class);
+    }
     public function category()
     {
-        return $this->belongsTo(AnnouncementCategory::class, 'category_id');
+        return $this->belongsTo(AnnouncementCategory::class, 'announcement_category_id');
+    }
+    // Misalnya dalam model:
+    public function getAttachmentUrlAttribute()
+    {
+        return $this->attachment ? asset('storage/' . $this->attachment) : null;
     }
 
-    public function author()
+    public function getIsImageAttachmentAttribute(): bool
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    protected static function booted()
-    {
-        static::deleting(function ($announcement) {
-            if ($announcement->attachment_path && Storage::disk('public')->exists($announcement->attachment_path)) {
-                Storage::disk('public')->delete($announcement->attachment_path);
-            }
-        });
+        $extension = strtolower(pathinfo($this->attachment, PATHINFO_EXTENSION));
+        return in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif']);
     }
 }

@@ -39,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->databaseNotifications()
             ->widgets([
-                AnnouncementWidget::class,
+                // AnnouncementWidget::class,
             ])
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('18rem')

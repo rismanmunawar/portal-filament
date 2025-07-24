@@ -61,7 +61,9 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('nik')->sortable(),
-                TextColumn::make('name')->sortable(),
+                TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('alias')->sortable(),
                 TextColumn::make('roles.name')
                     ->label('Roles')

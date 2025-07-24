@@ -2,10 +2,11 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Announcement\Announcement;
-use App\Models\Announcement\AnnouncementCategory;
 use Filament\Pages\Page;
+use App\Models\Announcement\Announcement;
 use Livewire\WithPagination;
+use App\Models\Announcement\AnnouncementComment;
+use Illuminate\Support\Facades\Auth;
 
 class AnnouncementBoard extends Page
 {
@@ -14,42 +15,45 @@ class AnnouncementBoard extends Page
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     protected static string $view = 'filament.pages.announcement-board';
     protected static ?string $navigationLabel = 'Announcement';
-    protected static ?string $title = 'Announcement';
+    protected static ?string $title = '📢 Announcement Board';
+    public array $newComments = [];
 
     public string $search = '';
-    public string $categoryFilter = 'all';
 
-    public function updatedSearch()
-    {
-        $this->resetPage();
-    }
+    protected $queryString = ['search'];
 
-    public function updatedCategoryFilter()
-    {
-        $this->resetPage();
-    }
+    protected $updatesQueryString = ['search'];
 
-    public function getCategories()
+    public function getAnnouncementsProperty()
     {
-        return AnnouncementCategory::orderBy('name')->get();
-    }
-
-    public function getAnnouncements()
-    {
-        return Announcement::query()
-            ->with(['category', 'author'])
-            ->where('is_active', true)
-            ->when($this->categoryFilter !== 'all', function ($query) {
-                $query->where('category_id', (int) $this->categoryFilter);
-            })
+        return Announcement::with(['comments.user', 'user'])
             ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('title', 'like', '%' . $this->search . '%')
-                        ->orWhere('content', 'like', '%' . $this->search . '%');
-                });
+                $query->where('title', 'like', "%{$this->search}%")
+                    ->orWhere('content', 'like', "%{$this->search}%");
             })
-            ->orderByDesc('is_pinned')
-            ->orderByDesc('starts_at')
-            ->paginate(3);
+            ->latest()
+            ->paginate(2);
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function addComment($announcementId)
+    {
+        $content = $this->newComments[$announcementId] ?? null;
+
+        if (! $content) return;
+
+        AnnouncementComment::create([
+            'announcement_id' => $announcementId,
+            'user_id' => Auth::id(),
+            'comment' => $content,
+        ]);
+
+        $this->newComments[$announcementId] = '';
+
+        $this->dispatch('notification', title: 'Comment added!');
     }
 }
