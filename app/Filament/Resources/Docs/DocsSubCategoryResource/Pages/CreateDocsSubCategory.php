@@ -15,6 +15,6 @@ class CreateDocsSubCategory extends CreateRecord
     // }
     protected function getRedirectUrl(): string
     {
-        return url('/admin/docs-management');
+        return static::getResource()::getUrl('index');
     }
 }

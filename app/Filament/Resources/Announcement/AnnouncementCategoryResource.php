@@ -23,6 +23,8 @@ class AnnouncementCategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Category';
     protected static ?string $cluster = Announcements::class;
+    protected static ?string $slug = "categories";
+
     public static function form(Form $form): Form
     {
         return $form->schema([

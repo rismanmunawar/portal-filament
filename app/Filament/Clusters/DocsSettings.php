@@ -9,4 +9,8 @@ class DocsSettings extends Cluster
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static ?string $navigationGroup = 'System Management';
     protected static ?string $navigationLabel = 'Documentations';
+    public static function getSlug(): string
+    {
+        return 'cls-docs';
+    }
 }

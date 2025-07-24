@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDataDist extends CreateRecord
 {
     protected static string $resource = DataDistResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

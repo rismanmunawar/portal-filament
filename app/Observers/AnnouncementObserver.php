@@ -27,7 +27,7 @@ class AnnouncementObserver
 
         Notification::make()
             ->title('Announcement New')
-            ->body("{$announcement->title} telah diterbitkan. Klik untuk melihat detailnya.")
+            ->body("{$announcement->title} has been published. Click to see the details.")
             ->icon('heroicon-o-megaphone')
             ->color(match ($announcement->type) {
                 'success' => 'success',
@@ -36,7 +36,7 @@ class AnnouncementObserver
                 default => 'info',
             })
             ->actions([
-                \Filament\Notifications\Actions\Action::make('Lihat')
+                \Filament\Notifications\Actions\Action::make('View')
                     ->url(route('filament.admin.pages.announcement-board', $announcement->id)) // Ganti sesuai route kamu
                     ->button()
                     ->color('primary'),

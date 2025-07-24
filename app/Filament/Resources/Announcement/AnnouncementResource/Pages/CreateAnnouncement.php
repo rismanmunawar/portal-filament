@@ -14,4 +14,9 @@ class CreateAnnouncement extends CreateRecord
         $data['user_id'] = auth()->id(); // Tambahkan user_id di sini
         return $data;
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

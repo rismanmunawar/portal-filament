@@ -28,6 +28,7 @@ class AnnouncementResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $cluster = Announcements::class;
     protected static ?string $navigationLabel = 'Announcements';
+    protected static ?string $slug = "announcements";
 
     public static function mutateFormDataBeforeCreate(array $data): array
     {

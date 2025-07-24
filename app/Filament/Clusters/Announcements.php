@@ -9,4 +9,9 @@ class Announcements extends Cluster
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     protected static ?string $navigationGroup = 'System Management';
     protected static ?string $navigationLabel = 'Announcement';
+
+    public static function getSlug(): string
+    {
+        return 'cls-ann';
+    }
 }

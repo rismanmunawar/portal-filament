@@ -26,6 +26,7 @@ class DocsSubCategoryResource extends Resource
     protected static ?string $navigationGroup = 'Docs Management';
     protected static ?string $navigationLabel = 'Sub Category';
     protected static ?string $cluster = DocsSettings::class;
+    protected static ?string $slug = "subcategories";
 
 
     public static function form(Form $form): Form

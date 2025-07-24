@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDataIT extends CreateRecord
 {
     protected static string $resource = DataITResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

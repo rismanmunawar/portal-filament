@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDataROM extends CreateRecord
 {
     protected static string $resource = DataROMResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

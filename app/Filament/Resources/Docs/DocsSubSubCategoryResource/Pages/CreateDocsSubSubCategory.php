@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDocsSubSubCategory extends CreateRecord
 {
     protected static string $resource = DocsSubSubCategoryResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }
